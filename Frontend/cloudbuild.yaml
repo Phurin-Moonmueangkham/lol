@@ -7,8 +7,6 @@ steps:
       [
         'build',
         '-t',
-        # แทนที่ LOCATION, PROJECT_ID, REPOSITORY_NAME, และ SERVICE_NAME
-        # ตัวอย่าง: 'asia-southeast1-docker.pkg.dev/my-project/my-repo/doi-tung-laundry:$COMMIT_SHA'
         '${_LOCATION}-docker.pkg.dev/${_PROJECT_ID}/${_REPOSITORY_NAME}/${_SERVICE_NAME}:$COMMIT_SHA',
         '.',
       ]
@@ -22,17 +20,13 @@ steps:
       [
         'run',
         'deploy',
-        # แทนที่ SERVICE_NAME
         '${_SERVICE_NAME}',
         '--image',
-        # อ้างอิง Image ที่สร้างในขั้นตอนที่ 1
         '${_LOCATION}-docker.pkg.dev/${_PROJECT_ID}/${_REPOSITORY_NAME}/${_SERVICE_NAME}:$COMMIT_SHA',
-        # แทนที่ LOCATION (Region)
         '--region',
         '${_LOCATION}',
         '--platform',
         'managed',
-        # --- ทำให้เว็บเข้าถึงได้แบบสาธารณะ ---
         '--allow-unauthenticated',
       ]
     id: 'Deploy to Cloud Run'
@@ -41,8 +35,7 @@ steps:
 images:
   - '${_LOCATION}-docker.pkg.dev/${_PROJECT_ID}/${_REPOSITORY_NAME}/${_SERVICE_NAME}:$COMMIT_SHA'
 
-# กำหนดค่าตัวแปร (Substitutions) ที่จะใช้ในไฟล์นี้
-# คุณสามารถเปลี่ยนค่า default หรือส่งค่าใหม่เข้ามาตอนรัน gcloud builds submit
+# กำหนดค่าตัวแปร (Substitutions)
 substitutions:
   _LOCATION: 'us-central1 (lowa)' # เช่น asia-southeast1 (กรุงเทพ)
   _PROJECT_ID: 'Ydoitung-478412' # ใส่ Project ID ของคุณ
