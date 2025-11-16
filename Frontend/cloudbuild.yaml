@@ -7,6 +7,7 @@ steps:
       [
         'build',
         '-t',
+        # ชื่อ Image ที่ถูกต้องจะถูกสร้างจากตัวแปรข้างล่าง
         '${_LOCATION}-docker.pkg.dev/${_PROJECT_ID}/${_REPOSITORY_NAME}/${_SERVICE_NAME}:$COMMIT_SHA',
         '.',
       ]
@@ -24,7 +25,7 @@ steps:
         '--image',
         '${_LOCATION}-docker.pkg.dev/${_PROJECT_ID}/${_REPOSITORY_NAME}/${_SERVICE_NAME}:$COMMIT_SHA',
         '--region',
-        '${_LOCATION}',
+        '${_LOCATION}', # ใช้ _LOCATION ที่ถูกต้อง
         '--platform',
         'managed',
         '--allow-unauthenticated',
@@ -35,15 +36,23 @@ steps:
 images:
   - '${_LOCATION}-docker.pkg.dev/${_PROJECT_ID}/${_REPOSITORY_NAME}/${_SERVICE_NAME}:$COMMIT_SHA'
 
-# กำหนดค่าตัวแปร (Substitutions)
-substitutions:
-  _LOCATION: 'us-central1 (lowa)' # เช่น asia-southeast1 (กรุงเทพ)
-  _PROJECT_ID: 'Ydoitung-478412' # ใส่ Project ID ของคุณ
-  _REPOSITORY_NAME: 'doitung' # ใส่ชื่อ Artifact Registry Repository
-  _SERVICE_NAME: 'doi-tung-laundry' # ตั้งชื่อบริการ Cloud Run
-
-# ตั้งค่า Timeout
+# กำหนดค่า Timeout
 timeout: '1600s'
 
+# -----------------------------------------------------------
+# --- ⬇️ แก้ไขส่วนนี้ให้ถูกต้อง ⬇️ ---
+# -----------------------------------------------------------
+substitutions:
+  # แก้ไข LOCATION: ห้ามมีวงเล็บหรือช่องว่าง
+  _LOCATION: 'us-central1'
+  
+  # แก้ไข PROJECT_ID: ต้องเป็นตัวพิมพ์เล็กทั้งหมด
+  _PROJECT_ID: 'ydoitung-478412' # (โปรดตรวจสอบ Project ID จริงของคุณ)
+  
+  # นี่คือค่าจากใน Error ของคุณ
+  _REPOSITORY_NAME: 'doitung'
+  _SERVICE_NAME: 'doi-tung-laundry'
+
+# บอกให้ Cloud Build ส่ง Log ไปที่ Cloud Logging โดยตรง
 options:
   logging: CLOUD_LOGGING_ONLY
